@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Core\Application\Common\UseCase;
 
-final class NotFoundResponse extends AbstractResponse
+final class NotFoundResponse extends AbstractResponse implements ResponseInterface
 {
     /**
      * @param string|\Throwable $objectNotFound

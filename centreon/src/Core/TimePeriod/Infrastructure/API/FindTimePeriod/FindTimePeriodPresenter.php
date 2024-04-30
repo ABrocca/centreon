@@ -23,35 +23,34 @@ declare(strict_types=1);
 
 namespace Core\TimePeriod\Infrastructure\API\FindTimePeriod;
 
-use Core\Application\Common\UseCase\AbstractPresenter;
-use Core\Application\Common\UseCase\PresenterInterface;
-use Core\Infrastructure\Common\Presenter\PresenterFormatterInterface;
+use Centreon\Domain\Log\LoggerTrait;
 use Core\TimePeriod\Application\UseCase\FindTimePeriod\FindTimePeriodResponse;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Serializer;
 
-class FindTimePeriodPresenter extends AbstractPresenter implements PresenterInterface
+class FindTimePeriodPresenter
 {
+    use LoggerTrait;
+    public const FORMAT_JSON = 'json';
+    public const FORMAT_XML = 'xml';
+
     /**
-     * @param PresenterFormatterInterface $presenterFormatter
+     * @param Serializer $serializer
      */
-    public function __construct(PresenterFormatterInterface $presenterFormatter)
+    public function __construct(readonly private Serializer $serializer)
     {
-        parent::__construct($presenterFormatter);
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @param FindTimePeriodResponse $data
+     * @param string $format
+     * @param array $context
+     *
+     * @throws ExceptionInterface
+     * @return string
      */
-    public function present(mixed $data): void
+    public function present(mixed $data, string $format = self::FORMAT_JSON, array $context = []): string
     {
-        parent::present([
-            'id' => $data->id,
-            'name' => $data->name,
-            'alias' => $data->alias,
-            'days' => $data->days,
-            'templates' => $data->templates,
-            'exceptions' => $data->exceptions,
-        ]);
+        return $this->serializer->serialize($data, $format, $context);
     }
 }
