@@ -24,9 +24,10 @@ declare(strict_types=1);
 namespace Core\TimePeriod\Infrastructure\API\FindTimePeriod;
 
 use Centreon\Domain\Log\LoggerTrait;
-use Core\TimePeriod\Application\UseCase\FindTimePeriod\FindTimePeriodResponse;
+use Core\Application\Common\UseCase\ResponseInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class FindTimePeriodPresenter
 {
@@ -37,16 +38,17 @@ class FindTimePeriodPresenter
     /**
      * @param Serializer $serializer
      */
-    public function __construct(readonly private Serializer $serializer)
+    public function __construct(readonly private SerializerInterface $serializer)
     {
     }
 
     /**
-     * @param FindTimePeriodResponse $data
+     * @param ResponseInterface $data
      * @param string $format
-     * @param array $context
+     * @param array<mixed> $context
      *
      * @throws ExceptionInterface
+     *
      * @return string
      */
     public function present(mixed $data, string $format = self::FORMAT_JSON, array $context = []): string

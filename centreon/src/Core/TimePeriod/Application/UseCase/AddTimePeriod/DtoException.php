@@ -21,10 +21,20 @@
 
 declare(strict_types = 1);
 
-namespace Core\TimePeriod\Application\UseCase\FindTimePeriod;
+namespace Core\TimePeriod\Application\UseCase\AddTimePeriod;
 
-use Core\Application\Common\UseCase\ResponseInterface;
+use Symfony\Component\Serializer\Attribute\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
-interface ErrorResponseInterface extends ResponseInterface
+class DtoException
 {
+    public function __construct(
+        #[Assert\NotBlank]
+        #[SerializedName('day_range')]
+        public readonly string $dayRange,
+        #[Assert\NotBlank]
+        #[SerializedName('time_range')]
+        public readonly string $timeRange,
+    ) {
+    }
 }

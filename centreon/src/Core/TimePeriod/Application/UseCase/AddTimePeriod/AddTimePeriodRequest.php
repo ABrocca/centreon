@@ -23,18 +23,49 @@ declare(strict_types=1);
 
 namespace Core\TimePeriod\Application\UseCase\AddTimePeriod;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 final class AddTimePeriodRequest
 {
-    public string $name = '';
-
-    public string $alias = '';
-
-    /** @var array<array{day: int, time_range: string}> */
-    public array $days = [];
-
-    /** @var int[] */
-    public array $templates = [];
-
-    /** @var array<array{day_range: string, time_range: string}> */
-    public array $exceptions = [];
+    /**
+     * @param string $name
+     * @param string $alias
+     * @param array<array{day: int, time_range:string}> $days
+     * @param int[] $templates
+     * @param array<array{day_range: string, time_range:string}> $exceptions
+     */
+    public function __construct(
+        #[Assert\NotBlank]
+        public readonly string $name,
+        #[Assert\NotBlank]
+        public readonly string $alias,
+        #[Assert\Collection(
+            fields: [
+                'day' => new Assert\Required([
+                    new Assert\NotBlank,
+                    new Assert\Type('integer'),
+                ]),
+                'time_range' => new Assert\Required([
+                    new Assert\NotBlank,
+                    new Assert\Type('string'),
+                ]),
+            ]
+        )]
+        public readonly array $days,
+        public readonly array $templates = [],
+        #[Assert\Collection(
+            fields: [
+                'day_range' => new Assert\Required([
+                    new Assert\NotBlank,
+                    new Assert\Type('string'),
+                ]),
+                'time_range' => new Assert\Required([
+                    new Assert\NotBlank,
+                    new Assert\Type('string'),
+                ]),
+            ]
+        )]
+        public readonly array $exceptions = [],
+    ) {
+    }
 }

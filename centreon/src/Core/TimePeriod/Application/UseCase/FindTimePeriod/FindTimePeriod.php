@@ -29,14 +29,9 @@ use Centreon\Domain\Log\LoggerTrait;
 use Core\Application\Common\UseCase\{ErrorResponse,
     ForbiddenResponse,
     NotFoundResponse,
-    PresenterInterface,
     ResponseInterface};
 use Core\TimePeriod\Application\Exception\TimePeriodException;
 use Core\TimePeriod\Application\Repository\ReadTimePeriodRepositoryInterface;
-use Core\TimePeriod\Domain\Model\{
-    Day, ExtraTimePeriod, Template, TimePeriod
-};
-
 final class FindTimePeriod
 {
     use LoggerTrait;
@@ -73,8 +68,10 @@ final class FindTimePeriod
             $timePeriod = $this->readTimePeriodRepository->findById($timePeriodId);
             if ($timePeriod === null) {
                 $this->error('Time period not found', ['id' => $timePeriodId]);
+
                 return new NotFoundResponse('Time period');
             }
+
             return new FindTimePeriodResponse($timePeriod);
         } catch (\Throwable $ex) {
             $this->error(

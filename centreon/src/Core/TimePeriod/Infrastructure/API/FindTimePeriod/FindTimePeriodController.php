@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace Core\TimePeriod\Infrastructure\API\FindTimePeriod;
 
 use Centreon\Application\Controller\AbstractController;
-use Core\Infrastructure\Common\Presenter\PresenterFormatterInterface;
 use Core\TimePeriod\Application\UseCase\FindTimePeriod\FindTimePeriod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 final class FindTimePeriodController extends AbstractController
 {
@@ -41,12 +40,15 @@ final class FindTimePeriodController extends AbstractController
      * @param FindTimePeriodPresenter $presenter
      * @param int $id
      *
+     * @throws ExceptionInterface
+     *
      * @return Response
      */
     public function __invoke(FindTimePeriod $useCase, FindTimePeriodPresenter $presenter, int $id): Response
     {
         $this->denyAccessUnlessGrantedForApiConfiguration();
         $response = $useCase($id);
+
         return JsonResponse::fromJsonString(
             $presenter->present(
                 $response,

@@ -34,7 +34,6 @@ use Centreon\Domain\RequestParameters\{
     Interfaces\RequestParametersInterface, RequestParameters, RequestParametersException
 };
 use Centreon\Domain\VersionHelper;
-use JMS\Serializer\Exception\ValidationFailedException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -49,6 +48,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\{
     Exception\AccessDeniedException
 };
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
  * We defined an event subscriber on the kernel event request to create a
@@ -298,6 +298,7 @@ class CentreonEventSubscriber implements EventSubscriberInterface
          * If we don't do that, an HTML error will appear.
          */
         if ($errorIsBeforeController) {
+            $message = $event->getThrowable()->getMessage();
             if ($event->getThrowable()->getCode() >= Response::HTTP_INTERNAL_SERVER_ERROR) {
                 $errorCode = $event->getThrowable()->getCode();
                 $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
@@ -310,6 +311,11 @@ class CentreonEventSubscriber implements EventSubscriberInterface
             ) {
                 $errorCode = Response::HTTP_NOT_FOUND;
                 $statusCode = Response::HTTP_NOT_FOUND;
+            } elseif ($event->getThrowable()->getPrevious() instanceof ValidationFailedException) {
+                $errorCode = $event->getThrowable()->getPrevious()->getCode();
+                $statusCode = $event->getThrowable()->getPrevious()->getCode()
+                    ?: Response::HTTP_INTERNAL_SERVER_ERROR;
+                $message = $event->getThrowable()->getPrevious()->getMessage();
             } else {
                 $errorCode = $event->getThrowable()->getCode();
                 $statusCode = $event->getThrowable()->getCode()
@@ -321,7 +327,7 @@ class CentreonEventSubscriber implements EventSubscriberInterface
                 new Response(
                     json_encode([
                         'code' => $errorCode,
-                        'message' => $event->getThrowable()->getMessage(),
+                        'message' => $message,
                     ]),
                     $statusCode
                 )
