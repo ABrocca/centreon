@@ -1,5 +1,7 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
+import { CopyToContainerContentType } from '@centreon/js-config/cypress/e2e/commands';
+
 import {
   checkHostsAreMonitored,
   checkServicesAreMonitored
@@ -12,7 +14,6 @@ import {
   initializeDataFiles
 } from '../common';
 import data from '../../../fixtures/notifications/data-for-notification.json';
-import { CopyToContainerContentType } from '@centreon/js-config/cypress/e2e/commands';
 
 let globalResourceType = '';
 let globalContactSettings = '';
@@ -38,6 +39,10 @@ beforeEach(() => {
     method: 'GET',
     url: '/centreon/api/latest/configuration/users?page=1*'
   }).as('getUsers');
+  cy.intercept({
+    method: 'GET',
+    url: '/centreon/api/latest/configuration/timeperiods*'
+  }).as('getTimeperiods');
 
   globalResourceType = '';
   globalContactSettings = '';
@@ -174,6 +179,12 @@ When(
     }
   }
 );
+
+When('the user defines a time period', () => {
+  cy.getByLabel({ label: 'Select time period' }).click();
+  cy.wait('@getTimeperiods');
+  cy.contains(data.timeperiod.name).click();
+});
 
 When('the user selects the {string}', (contactSettings: string) => {
   switch (contactSettings) {
@@ -395,8 +406,8 @@ Given(
     cy.copyToContainer({
       destination:
         '/bitnami/mariadb/data/centreon_storage/centreon_storage_services.txt',
-      source: './fixtures/notifications/centreon_storage_services.txt',
       name: 'db',
+      source: './fixtures/notifications/centreon_storage_services.txt',
       type: CopyToContainerContentType.File
     });
 
@@ -413,8 +424,8 @@ Given(
 
     cy.copyToContainer({
       destination: '/bitnami/mariadb/data/centreon/centreon_services.txt',
-      source: './fixtures/notifications/centreon_services.txt',
       name: 'db',
+      source: './fixtures/notifications/centreon_services.txt',
       type: CopyToContainerContentType.File
     });
 
@@ -430,8 +441,8 @@ Given(
 
     cy.copyToContainer({
       destination: '/bitnami/mariadb/data/centreon/host_service_relation.txt',
-      source: './fixtures/notifications/host_service_relation.txt',
       name: 'db',
+      source: './fixtures/notifications/host_service_relation.txt',
       type: CopyToContainerContentType.File
     });
 
@@ -481,9 +492,9 @@ When(
 
     cy.fixture('notifications/payload-check.json').then((payloadCheck) => {
       cy.request({
+        body: payloadCheck,
         method: 'POST',
-        url: '/centreon/api/latest/monitoring/resources/check',
-        body: payloadCheck
+        url: '/centreon/api/latest/monitoring/resources/check'
       }).then((response) => {
         expect(response.status).to.eq(204);
       });

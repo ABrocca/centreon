@@ -90,7 +90,7 @@ final class AddNotification
             $this->info('Add notification', ['request' => $request]);
 
             $notificationFactory = new NewNotificationFactory($this->readNotificationRepository);
-            $newNotification = $notificationFactory->create($request->name, $request->isActivated);
+            $newNotification = $notificationFactory->create($request->name, $request->isActivated, $request->timeperiodId);
 
             $newMessages = NotificationMessageFactory::createMultipleMessage($request->messages);
 

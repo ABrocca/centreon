@@ -31,17 +31,25 @@ import {
   labelNotificationDuplicated,
   labelSearchBusinessViews,
   labelBusinessViewsEvents,
-  labelSearchContacts
+  labelSearchContacts,
+  labelTimePeriodFieldShouldNotBeEmpty
 } from '../../translatedLabels';
 import { notificationsNamesAtom, panelWidthStorageAtom } from '../../atom';
 import { DeleteConfirmationDialog } from '../../Actions/Delete';
 import { DuplicationForm } from '../../Actions/Duplicate';
-import { notificationEndpoint } from '../api/endpoints';
+import {
+  availableTimePeriodsEndpoint,
+  notificationEndpoint
+} from '../api/endpoints';
 import { PanelMode } from '../models';
 import { editedNotificationIdAtom, panelModeAtom } from '../atom';
 import Form from '..';
 
-import { getNotificationResponse, platformVersions } from './testUtils';
+import {
+  getNotificationResponse,
+  platformVersions,
+  timePeriodsResponse
+} from './testUtils';
 
 import { platformVersionsAtom } from 'www/front_src/src/Main/atoms/platformVersionsAtom';
 
@@ -108,6 +116,13 @@ const initialize = ({
     method: Method.POST,
     path: notificationEndpoint({}),
     response: { status: 'ok' }
+  });
+
+  cy.interceptAPIRequest({
+    alias: 'getAvailableTimePeriodEndpoint',
+    method: Method.GET,
+    path: `${availableTimePeriodsEndpoint}**`,
+    response: timePeriodsResponse
   });
 
   cy.mount({
@@ -382,7 +397,7 @@ describe('Edit Panel', () => {
   it('validates that when the Contacts field is empty, the user interface responds by displaying an error message and disabling the Save button', () => {
     cy.waitForRequest('@getNotificationRequest');
 
-    cy.findAllByLabelText('Clear').eq(2).click({ force: true });
+    cy.findAllByLabelText('Clear').eq(3).click({ force: true });
     cy.findByTestId(labelSearchContacts).click();
 
     cy.clickOutside();
@@ -395,12 +410,19 @@ describe('Edit Panel', () => {
     cy.makeSnapshot();
   });
 
-  it('ensures that the time period checkbox is checked and disabled, indicating its pre-selected status', () => {
+  it('validates that when the Time period field is empty, the user interface responds by displaying an error message and disabling the Save button', () => {
     cy.waitForRequest('@getNotificationRequest');
 
-    cy.findByTestId(labelTimePeriod).within(() => {
-      cy.findByRole('checkbox').should('be.checked').and('be.disabled');
-    });
+    cy.findAllByLabelText('Clear').eq(2).click({ force: true });
+    cy.findByTestId(labelTimePeriod).click();
+
+    cy.clickOutside();
+
+    cy.findAllByText(labelTimePeriodFieldShouldNotBeEmpty).should(
+      'have.length',
+      1
+    );
+    cy.findByLabelText(labelSave).should('be.disabled');
 
     cy.get('#panel-content').scrollTo('top');
 
