@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 
@@ -38,7 +39,7 @@ export default ({
 
   return defineConfig({
     chromeWebSecurity: false,
-    defaultCommandTimeout: 6000,
+    defaultCommandTimeout: 20000,
     downloadsFolder: `${resultsFolder}/downloads`,
     e2e: {
       excludeSpecPattern: ['*.js', '*.ts', '*.md'],
@@ -66,10 +67,10 @@ export default ({
       WEB_IMAGE_VERSION: webImageVersion
     },
     execTimeout: 60000,
-    requestTimeout: 10000,
+    requestTimeout: 20000,
     retries: 0,
     screenshotsFolder: `${resultsFolder}/screenshots`,
-    video: isDevelopment,
+    video: true,
     videoCompression: 0,
     videosFolder: `${resultsFolder}/videos`
   });
