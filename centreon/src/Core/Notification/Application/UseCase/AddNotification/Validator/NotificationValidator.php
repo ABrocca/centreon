@@ -29,6 +29,7 @@ use Centreon\Domain\Log\LoggerTrait;
 use Core\Contact\Application\Repository\ReadContactGroupRepositoryInterface;
 use Core\Contact\Domain\Model\ContactGroup;
 use Core\Notification\Application\Exception\NotificationException;
+use Core\TimePeriod\Application\Repository\ReadTimePeriodRepositoryInterface;
 use Utility\Difference\BasicDifference;
 
 class NotificationValidator
@@ -61,6 +62,26 @@ class NotificationValidator
         }
         if (! empty($contactGroupsIds)) {
             $this->validateContactGroups($contactGroupsIds, $contactGroupRepository, $user);
+        }
+    }
+
+    /**
+     * Validate that provided time period id exists.
+     *
+     * @param int $timeperiodId
+     * @param ReadTimePeriodRepositoryInterface $readTimeperiodRepository
+     *
+     * @throws \Throwable|NotificationException
+     */
+    public function validateTimeperiod(
+        int $timeperiodId, 
+        ReadTimePeriodRepositoryInterface $readTimeperiodRepository
+    ): void
+    {
+        if (false === $readTimeperiodRepository->exists($timeperiodId)) {
+            $this->error('Time period does not exist', ['timePeriodId' => $timeperiodId]);
+
+            throw NotificationException::invalidId('timeperiod');
         }
     }
 
