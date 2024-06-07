@@ -55,6 +55,7 @@ use Core\Notification\Domain\Model\ConfigurationUser;
 use Core\Notification\Infrastructure\API\AddNotification\AddNotificationPresenter;
 use Core\Security\AccessGroup\Application\Repository\ReadAccessGroupRepositoryInterface;
 use Core\TimePeriod\Domain\Model\TimePeriod;
+use Core\TimePeriod\Application\Repository\ReadTimePeriodRepositoryInterface;
 
 beforeEach(function (): void {
     $this->presenterFormatter = $this->createMock(PresenterFormatterInterface::class);
@@ -87,6 +88,7 @@ beforeEach(function (): void {
         $this->resourceRepositoryProvider = $this->createMock(NotificationResourceRepositoryProviderInterface::class),
         $this->dataStorageEngine = $this->createMock(DataStorageEngineInterface::class),
         $this->user = $this->createMock(ContactInterface::class),
+        $this->readTimeperiodRepository = $this->createMock(ReadTimePeriodRepositoryInterface::class),
     );
 
     $this->resourceRepository = $this->createMock(NotificationResourceRepositoryInterface::class);
