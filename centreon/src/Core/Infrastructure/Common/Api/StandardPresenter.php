@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Core\TimePeriod\Infrastructure\API\FindTimePeriod;
+namespace Core\Infrastructure\Common\Api;
 
 use Centreon\Domain\Log\LoggerTrait;
 use Core\Application\Common\UseCase\ResponseInterface;
@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class FindTimePeriodPresenter
+class StandardPresenter
 {
     use LoggerTrait;
     public const FORMAT_JSON = 'json';
@@ -43,7 +43,7 @@ class FindTimePeriodPresenter
     }
 
     /**
-     * @param ResponseInterface $data
+     * @param object $data
      * @param string $format
      * @param array<mixed> $context
      *
