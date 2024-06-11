@@ -346,7 +346,7 @@ class CentreonEventSubscriber implements EventSubscriberInterface
                     'message' => $event->getThrowable()->getMessage(),
                 ]);
                 $httpCode = Response::HTTP_NOT_FOUND;
-            } elseif ($event->getThrowable() instanceof ValidationFailedException) {
+            } elseif ($event->getThrowable() instanceof \JMS\Serializer\Exception\ValidationFailedException) {
                 $errorMessage = json_encode([
                     'code' => $errorCode,
                     'message' => EntityValidator::formatErrors(
