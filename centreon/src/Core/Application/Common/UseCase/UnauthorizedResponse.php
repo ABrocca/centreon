@@ -23,6 +23,6 @@ declare(strict_types=1);
 
 namespace Core\Application\Common\UseCase;
 
-class UnauthorizedResponse extends AbstractResponse
+class UnauthorizedResponse extends AbstractResponse implements ResponseStatusInterface
 {
 }

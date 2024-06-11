@@ -32,7 +32,7 @@ final class AddTimePeriodRequest
      * @param string $alias
      * @param array<array{day: int, time_range:string}> $days
      * @param int[] $templates
-     * @param array<array{day_range: string, time_range:string}> $exceptions
+     * @param DtoException[] $exceptions
      */
     public function __construct(
         #[Assert\NotBlank]

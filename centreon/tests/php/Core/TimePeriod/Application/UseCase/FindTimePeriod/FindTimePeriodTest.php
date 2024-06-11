@@ -195,6 +195,7 @@ it('should present a FindTimePeriodResponse if the time response is found and us
 
     $useCase = new FindTimePeriod($this->readRepository, $this->user);
 
+    /** @var FindTimePeriodResponse $response */
     $response = $useCase($timePeriodId);
 
     expect($response)

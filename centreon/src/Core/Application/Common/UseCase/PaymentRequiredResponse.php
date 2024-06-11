@@ -23,6 +23,6 @@ declare(strict_types=1);
 
 namespace Core\Application\Common\UseCase;
 
-final class PaymentRequiredResponse extends AbstractResponse
+final class PaymentRequiredResponse extends AbstractResponse implements ResponseStatusInterface
 {
 }

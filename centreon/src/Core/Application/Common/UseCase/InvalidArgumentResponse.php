@@ -23,6 +23,6 @@ declare(strict_types=1);
 
 namespace Core\Application\Common\UseCase;
 
-final class InvalidArgumentResponse extends AbstractResponse
+final class InvalidArgumentResponse extends AbstractResponse implements ResponseStatusInterface
 {
 }

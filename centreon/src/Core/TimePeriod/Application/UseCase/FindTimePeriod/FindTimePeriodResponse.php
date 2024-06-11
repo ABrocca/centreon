@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Core\TimePeriod\Application\UseCase\FindTimePeriod;
 
-use Core\Application\Common\UseCase\StandardResponseInterface;
 use Core\TimePeriod\Domain\Model\TimePeriod;
 
-final class FindTimePeriodResponse implements StandardResponseInterface
+final class FindTimePeriodResponse
 {
     public function __construct(readonly public TimePeriod $timePeriod)
     {

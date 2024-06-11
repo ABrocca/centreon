@@ -29,9 +29,10 @@ use Centreon\Domain\Log\LoggerTrait;
 use Core\Application\Common\UseCase\{ErrorResponse,
     ForbiddenResponse,
     NotFoundResponse,
-    ResponseInterface};
+    ResponseStatusInterface};
 use Core\TimePeriod\Application\Exception\TimePeriodException;
 use Core\TimePeriod\Application\Repository\ReadTimePeriodRepositoryInterface;
+
 final class FindTimePeriod
 {
     use LoggerTrait;
@@ -49,9 +50,9 @@ final class FindTimePeriod
     /**
      * @param int $timePeriodId
      *
-     * @return ResponseInterface
+     * @return FindTimePeriodResponse|ResponseStatusInterface
      */
-    public function __invoke(int $timePeriodId): ResponseInterface
+    public function __invoke(int $timePeriodId): FindTimePeriodResponse|ResponseStatusInterface
     {
         try {
             if (
