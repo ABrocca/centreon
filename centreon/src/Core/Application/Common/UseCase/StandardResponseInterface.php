@@ -23,7 +23,6 @@ declare(strict_types = 1);
 
 namespace Core\Application\Common\UseCase;
 
-
 interface StandardResponseInterface extends ResponseInterface
 {
 }
