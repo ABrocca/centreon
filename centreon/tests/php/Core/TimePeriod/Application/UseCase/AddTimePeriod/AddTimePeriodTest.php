@@ -29,7 +29,7 @@ use Core\Infrastructure\Common\Api\DefaultPresenter;
 use Core\Infrastructure\Common\Presenter\JsonFormatter;
 use Core\TimePeriod\Application\Exception\TimePeriodException;
 use Core\TimePeriod\Application\Repository\{ReadTimePeriodRepositoryInterface, WriteTimePeriodRepositoryInterface};
-use Core\TimePeriod\Application\UseCase\AddTimePeriod\{AddTimePeriod, AddTimePeriodRequest};
+use Core\TimePeriod\Application\UseCase\AddTimePeriod\{AddTimePeriod, AddTimePeriodRequest, DtoException};
 use Core\TimePeriod\Domain\Model\{Day, ExtraTimePeriod, Template, TimePeriod, TimeRange};
 use Tests\Core\TimePeriod\Application\UseCase\ExtractResponse;
 
@@ -47,8 +47,8 @@ beforeEach(function () {
         ],
         [1],
         [
-            ['day_range' => 'monday', 'time_range' => '00:00-01:00'],
-            ['day_range' => 'tuesday', 'time_range' => '00:00-01:00'],
+            new DtoException('monday', '00:00-01:00'),
+            new DtoException('tuesday', '00:00-01:00'),
         ]
     );
 });
