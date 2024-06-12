@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Core\Infrastructure\Common\Api;
 
 use Centreon\Domain\Log\LoggerTrait;
-use Core\Application\Common\UseCase\ResponseInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;

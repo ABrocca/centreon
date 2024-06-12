@@ -42,6 +42,7 @@ final class FindTimePeriodController extends AbstractController
      * @param int $id
      *
      * @throws ExceptionInterface
+     *
      * @return Response
      */
     public function __invoke(FindTimePeriod $useCase, StandardPresenter $presenter, int $id): Response
@@ -52,7 +53,7 @@ final class FindTimePeriodController extends AbstractController
         return JsonResponse::fromJsonString(
             $presenter->present(
                 $response,
-                FindTimePeriodPresenter::FORMAT_JSON,
+                StandardPresenter::FORMAT_JSON,
                 [],
             ));
     }
