@@ -24,15 +24,15 @@ declare(strict_types=1);
 namespace Core\Infrastructure\Common\Api;
 
 use Centreon\Domain\Log\LoggerTrait;
+use Core\Application\Common\UseCase\StandardPresenterInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class StandardPresenter
+class StandardPresenter implements StandardPresenterInterface
 {
     use LoggerTrait;
-    public const FORMAT_JSON = 'json';
-    public const FORMAT_XML = 'xml';
 
     /**
      * @param Serializer $serializer
@@ -50,7 +50,7 @@ class StandardPresenter
      *
      * @return string
      */
-    public function present(mixed $data, string $format = self::FORMAT_JSON, array $context = []): string
+    public function present(mixed $data, string $format = JsonEncoder::FORMAT, array $context = []): string
     {
         return $this->serializer->serialize($data, $format, $context);
     }

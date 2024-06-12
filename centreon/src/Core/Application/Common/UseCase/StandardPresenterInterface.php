@@ -21,22 +21,11 @@
 
 declare(strict_types = 1);
 
-namespace Core\TimePeriod\Application\UseCase\AddTimePeriod;
+namespace Core\Application\Common\UseCase;
 
-use Symfony\Component\Serializer\Attribute\SerializedName;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class DtoException
+interface StandardPresenterInterface
 {
-    public function __construct(
-        #[Assert\NotBlank]
-        #[Assert\Type('string')]
-        #[SerializedName('day_range')]
-        public readonly string $dayRange,
-        #[Assert\NotBlank]
-        #[Assert\Type('string')]
-        #[SerializedName('time_range')]
-        public readonly string $timeRange,
-    ) {
-    }
+    public function present(mixed $data, string $format = JsonEncoder::FORMAT, array $context = []): string;
 }

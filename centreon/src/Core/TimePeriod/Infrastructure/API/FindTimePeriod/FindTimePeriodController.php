@@ -28,6 +28,7 @@ use Core\Infrastructure\Common\Api\StandardPresenter;
 use Core\TimePeriod\Application\UseCase\FindTimePeriod\FindTimePeriod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 final class FindTimePeriodController extends AbstractController
@@ -51,10 +52,7 @@ final class FindTimePeriodController extends AbstractController
         $response = $useCase($id);
 
         return JsonResponse::fromJsonString(
-            $presenter->present(
-                $response,
-                StandardPresenter::FORMAT_JSON,
-                [],
-            ));
+            // Can also use an error presenter
+            $presenter->present($response));
     }
 }

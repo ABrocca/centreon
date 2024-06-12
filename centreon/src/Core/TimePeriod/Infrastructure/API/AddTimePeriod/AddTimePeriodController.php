@@ -25,10 +25,10 @@ namespace Core\TimePeriod\Infrastructure\API\AddTimePeriod;
 
 use Centreon\Application\Controller\AbstractController;
 use Centreon\Domain\Log\LoggerTrait;
-use Core\Infrastructure\Common\Api\Router;
 use Core\TimePeriod\Application\UseCase\AddTimePeriod\{
     AddTimePeriod, AddTimePeriodRequest
 };
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
 final class AddTimePeriodController extends AbstractController
@@ -39,16 +39,14 @@ final class AddTimePeriodController extends AbstractController
      * @param AddTimePeriod $useCase
      * @param AddTimePeriodRequest $input
      * @param AddTimePeriodsPresenter $presenter
-     * @param Router $router
      *
-     * @return object
+     * @return Response
      */
     public function __invoke(
         AddTimePeriod $useCase,
         #[MapRequestPayload] AddTimePeriodRequest $input,
         AddTimePeriodsPresenter $presenter,
-        Router $router
-    ): object {
+    ): Response {
         $this->denyAccessUnlessGrantedForApiConfiguration();
         $useCase($input, $presenter);
 
