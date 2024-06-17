@@ -50,9 +50,9 @@ final class FindTimePeriodController extends AbstractController
     {
         $this->denyAccessUnlessGrantedForApiConfiguration();
         $response = $useCase($id);
-
+        $normalisationFile = __DIR__ . '/response.yaml';
         return JsonResponse::fromJsonString(
             // Can also use an error presenter
-            $presenter->present($response));
+            $presenter->present($response, $normalisationFile));
     }
 }

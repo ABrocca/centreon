@@ -27,5 +27,10 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 interface StandardPresenterInterface
 {
-    public function present(mixed $data, string $format = JsonEncoder::FORMAT, array $context = []): string;
+    public function present(
+        mixed $data,
+        string $normalizeDefinition,
+        string $format = JsonEncoder::FORMAT,
+        array $context = []
+    ): string;
 }

@@ -24,9 +24,14 @@ declare(strict_types=1);
 namespace Core\Infrastructure\Common\Api;
 
 use Centreon\Domain\Log\LoggerTrait;
+use Core\Application\Common\UseCase\ResponseStatusInterface;
 use Core\Application\Common\UseCase\StandardPresenterInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\YamlFileLoader;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -43,15 +48,32 @@ class StandardPresenter implements StandardPresenterInterface
 
     /**
      * @param object $data
+     * @param string $normalizeDefinition
      * @param string $format
      * @param array<mixed> $context
      *
      * @throws ExceptionInterface
-     *
      * @return string
      */
-    public function present(mixed $data, string $format = JsonEncoder::FORMAT, array $context = []): string
-    {
+    public function present(
+        mixed $data,
+        string $normalizeDefinition,
+        string $format = JsonEncoder::FORMAT,
+        array $context = []
+    ): string {
+        if (! $data instanceof ResponseStatusInterface) {
+            if (! file_exists($normalizeDefinition)) {
+                throw new \InvalidArgumentException('The normalizer file (' . $normalizeDefinition . ') does not exist.');
+            }
+            $classMetadataFactory = new ClassMetadataFactory(new YamlFileLoader($normalizeDefinition));
+            $normalizer = new ObjectNormalizer(
+                $classMetadataFactory,
+                new CamelCaseToSnakeCaseNameConverter()
+            );
+            $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
+            $normalization = $serializer->normalize($data, null, ['groups' => 'Default']);
+            return $serializer->serialize($normalization, $format, $context);
+        }
         return $this->serializer->serialize($data, $format, $context);
     }
 }

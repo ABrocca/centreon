@@ -1,0 +1,12 @@
+Core\TimePeriod\Application\UseCase\FindTimePeriod\FindTimePeriodResponse:
+  attributes:
+    timePeriod:
+        groups:
+          - 'Default'
+
+
+Core\TimePeriod\Domain\Model\TimePeriod:
+  attributes:
+    name:
+      groups:
+        - 'Default'
