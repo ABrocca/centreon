@@ -6,7 +6,9 @@ require_once __DIR__ . '/../www/include/common/vault-functions.php';
 
 use App\Kernel;
 use Centreon\Domain\Log\Logger;
+use Core\Common\Infrastructure\FeatureFlags;
 use Core\Security\Vault\Application\Repository\ReadVaultConfigurationRepositoryInterface;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Utility\Interfaces\UUIDGeneratorInterface;
@@ -15,7 +17,18 @@ try {
     if (posix_getuid() !== 0) {
         throw new Exception('This script must be run as root');
     }
+    // Handle the migration of the database credentials to Vault.
+    (new Dotenv())->bootEnv('/usr/share/centreon/.env');
+    $isCloudPlatform = false;
+    if (array_key_exists("IS_CLOUD_PLATFORM", $_ENV) && $_ENV["IS_CLOUD_PLATFORM"]) {
+        $isCloudPlatform = true;
+    }
+    $featuresFileContent = file_get_contents(__DIR__ . '/../../../../config/features.json');
+    $featureFlagManager = new FeatureFlags($isCloudPlatform, $featuresFileContent);
+    $isVaultFeatureEnable = $featureFlagManager->isEnabled('vault');
+    $isBrokerVaultFeatureEnable = $featureFlagManager->isEnabled('vault_broker');
 
+    if ($isVaultFeatureEnable)
     migrateAndUpdateDatabaseCredentials();
     migrateApplicationCredentials();
 
